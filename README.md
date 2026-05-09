@@ -1,133 +1,45 @@
 # Freelance Project Marketplace
 
-A simplified Upwork-style marketplace where **Clients** post projects and **Developers/Freelancers** submit bids.
+Full-stack MVP for an Upwork-style marketplace where Clients post jobs and Freelancers bid.
 
-## Tech Stack
+## Included in this implementation
 
-- **Backend:** NestJS
-- **Database:** PostgreSQL
-- **ORM:** Prisma (recommended) or TypeORM
-- **Frontend:** React.js
-- **API Docs:** Swagger (OpenAPI)
+- NestJS backend API with:
+  - JWT authentication (`/auth/register`, `/auth/login`)
+  - Role-based access control (`client`, `freelancer`, `admin`)
+  - User profile endpoint (`/users/me`)
+  - Job posting and listing (`/jobs`)
+  - Bid workflow (`/bids`, `/bids/job/:jobId`, `/bids/:id/status`)
+  - Job-scoped messaging (`/messages`, `/messages/job/:jobId`)
+  - Swagger docs at `/docs`
+- React frontend starter with:
+  - Auth page
+  - Jobs browse page
 
-## Core Domain Roles
+## Project structure
 
-- **Client**
-  - Creates and manages job posts
-  - Reviews bids
-  - Accepts/rejects bids
-- **Freelancer**
-  - Browses open jobs
-  - Submits bids/proposals
-  - Tracks accepted/rejected status
-- **Admin (optional)**
-  - Manages disputes, users, and moderation
+- `backend/` NestJS API code
+- `frontend/` React app code
 
-## Key Features
+## Quick start
 
-1. **Dual User Profiles**
-   - One authentication system with role-based capabilities
-   - Profile metadata specific to Clients and Freelancers
+### Backend
 
-2. **Job Posting & Bidding**
-   - Clients create jobs with title, scope, budget, deadline, and skills
-   - Freelancers place bids with proposal text, amount, and estimated timeline
+```bash
+cd backend
+npm install
+npm run start:dev
+```
 
-3. **Messaging for Project Discussion**
-   - Threaded conversations per job or accepted contract
-   - Read/unread status and audit timestamps
+### Frontend
 
-## Suggested Backend Modules (NestJS)
+```bash
+cd frontend
+npm install
+# Run with your preferred React toolchain (Vite/CRA). App source is in src/
+```
 
-- `auth` (JWT authentication, refresh tokens)
-- `users` (profile + role management)
-- `jobs` (job CRUD and publish workflow)
-- `bids` (create/manage bids and status transitions)
-- `messages` (conversation and message delivery)
-- `contracts` (optional accepted-bid lifecycle)
-- `notifications` (optional in-app/email events)
+## Notes
 
-## RBAC Strategy (NestJS Focus)
-
-Use a combination of:
-
-- `JwtAuthGuard` for authenticated routes
-- `RolesGuard` for role checks (`client`, `freelancer`, `admin`)
-- Custom decorators like `@Roles(...)`
-- Ownership checks (e.g., only job owner can close posting)
-
-Example authorization rules:
-
-- Only **Clients** can create jobs.
-- Only **Freelancers** can bid.
-- Only job owner can accept a bid on that job.
-- Only conversation participants can read/send messages in a thread.
-
-## Data Model (High Level)
-
-- `User`
-  - id, email, passwordHash, role, createdAt
-- `ClientProfile`
-  - userId (1:1), companyName, about
-- `FreelancerProfile`
-  - userId (1:1), headline, skills, hourlyRate
-- `Job`
-  - id, clientId, title, description, budgetMin, budgetMax, status, createdAt
-- `Bid`
-  - id, jobId, freelancerId, amount, proposal, status, createdAt
-- `Conversation`
-  - id, jobId/contractId, createdAt
-- `ConversationParticipant`
-  - conversationId, userId
-- `Message`
-  - id, conversationId, senderId, body, createdAt
-- `Contract` (optional)
-  - id, jobId, acceptedBidId, status, startedAt, endedAt
-
-## DTO & Validation Conventions
-
-Use structured DTOs with `class-validator` + `class-transformer`:
-
-- `CreateJobDto`
-- `UpdateJobDto`
-- `CreateBidDto`
-- `UpdateBidStatusDto`
-- `SendMessageDto`
-
-Best practices:
-
-- Validate all payloads at controller boundaries
-- Prefer explicit enums for job/bid/contract states
-- Return paginated list responses for jobs, bids, and messages
-
-## API Documentation
-
-Enable Swagger in `main.ts` and document:
-
-- Authentication scheme (Bearer JWT)
-- Role requirements by endpoint
-- Request/response DTO examples
-- Error responses (401/403/404/422)
-
-## Frontend (React.js) Pages
-
-- Auth: Sign up / Sign in
-- Client Dashboard: My Jobs, Incoming Bids
-- Freelancer Dashboard: Browse Jobs, My Bids
-- Job Detail: Bids + discussion thread
-- Messaging Inbox
-
-## Delivery Roadmap (MVP)
-
-1. Auth + user roles
-2. Job CRUD (client-only create/update)
-3. Bid submission + acceptance flow
-4. Messaging between client and selected freelancer
-5. Swagger coverage + basic tests
-
-## Why This Project Works for NestJS
-
-- Demonstrates **RBAC and Guard composition** clearly
-- Leverages **DTO-driven APIs** with robust validation
-- Exercises **relational modeling** in PostgreSQL through Prisma/TypeORM
-- Produces a professional, testable API contract via Swagger
+- This MVP uses in-memory arrays as a persistence layer in services for simplicity.
+- Swap in Prisma + PostgreSQL by replacing service storage with repository/database access.
