@@ -6,7 +6,10 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "build": "nest build",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint \"src/**/*.ts\"",
+    "lint:fix": "npm run lint -- --fix",
+    "format": "prettier \"src/**/*.ts\" --check"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

@@ -21,6 +21,22 @@ Full-stack MVP for an Upwork-style marketplace where Clients post jobs and Freel
 - `backend/` NestJS API code
 - `frontend/` React app code
 
+
+## Monorepo tooling
+
+This repository is configured as an npm workspaces monorepo:
+
+- `backend/`
+- `frontend/`
+
+Shared linting/formatting is managed from the root with ESLint + Prettier.
+
+```bash
+npm install
+npm run lint
+npm run format
+```
+
 ## Quick start
 
 ### Backend
